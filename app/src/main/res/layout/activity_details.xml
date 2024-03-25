@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".MainActivity">
+
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:background="@drawable/bgmain"
+        android:layout_height="match_parent">
+
+        <!-- Baner serialu -->
+        <ImageView
+            android:id="@+id/bannerImageView"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:scaleType="centerCrop"
+            android:layout_alignParentTop="true"/>
+
+        <com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
+            android:id="@+id/youtube_player_view"
+            android:layout_width="match_parent"
+            android:visibility="gone"
+            app:autoPlay="false"
+            android:soundEffectsEnabled="false"
+            android:layout_height="wrap_content" />
+
+        <!-- Informacje o serialu -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_below="@id/bannerImageView"
+            android:padding="16dp">
+
+            <!-- Tytuł serialu -->
+            <TextView
+                android:id="@+id/titleTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:layout_marginEnd="80dp"
+                android:textSize="24sp"
+                android:layout_marginBottom="8dp"/>
+
+            <TextView
+                android:id="@+id/tvTagline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:layout_marginEnd="80dp"
+                android:textStyle="italic"
+                android:layout_marginBottom="8dp"/>
+
+            <TextView
+                android:id="@+id/tvTypeid"
+                android:textStyle="bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:text="Kategorie"
+                android:layout_marginBottom="8dp"/>
+
+            <TextView
+                android:id="@+id/tvType"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:layout_marginBottom="8dp"/>
+
+            <TextView
+                android:id="@+id/tvProviders"
+                android:textStyle="bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:text="Gdzie obejrzeć"
+                android:layout_marginBottom="8dp"/>
+
+            <TextView
+                android:id="@+id/tvLanguages"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:layout_marginBottom="8dp"/>
+
+            <TextView
+                android:id="@+id/tvNextEpis"
+                android:textStyle="bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:text="Następny odcinek"
+                android:layout_marginBottom="8dp"/>
+
+            <TextView
+                android:id="@+id/tvNextEpisode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:layout_marginBottom="8dp"/>
+
+            <TextView
+                android:id="@+id/tvOverview"
+                android:textStyle="bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:text="Opis Serialu"
+                android:layout_marginBottom="8dp"/>
+
+            <!-- Opis serialu -->
+            <TextView
+                android:id="@+id/descriptionTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:maxLines="2"
+                android:ellipsize="end"
+                android:layout_marginBottom="8dp"/>
+
+            <!-- Przycisk "Rozwiń" -->
+            <TextView
+                android:id="@+id/expandButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Rozwiń"
+                android:textSize="16sp"
+                android:textColor="@color/customRozwin"
+                android:layout_marginBottom="16dp"
+                android:visibility="gone"/> <!-- Początkowo niewidoczny -->
+
+            <Spinner
+                android:id="@+id/spinner_seasons"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"
+                android:padding="8dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="16dp"
+                android:background="@drawable/edittext_background"
+                android:textSize="16sp" />
+
+            <ProgressBar
+                android:id="@+id/progress_loader"
+                style="?android:attr/progressBarStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:visibility="gone" />
+
+            <!-- Inne informacje o serialu -->
+            <!-- Dodaj inne pola TextView dla innych informacji o serialu, takich jak gatunek, długość itp. -->
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/episodesRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"/>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+</androidx.core.widget.NestedScrollView>

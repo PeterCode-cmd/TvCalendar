@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="provider_options">
+        <item>Netflix</item>
+        <item>Amazon Prime</item>
+        <item>Disney+</item>
+        <item>Apple TV Plus</item>
+        <item>SkyShowtime</item>
+        <item>HBO MAX</item>
+    </string-array>
+</resources>
