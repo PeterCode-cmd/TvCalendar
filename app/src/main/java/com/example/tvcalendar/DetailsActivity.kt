@@ -69,6 +69,7 @@ class DetailsActivity : AppCompatActivity() {
         val backdropURL = intent.getStringExtra("backdropUrl")
         val overview = intent.getStringExtra("overview")
         val title = intent.getStringExtra("title")
+        val originalName = intent.getStringExtra("original_name")
 
         Log.d("Details Activity", "Series ID: $serialId")
 
@@ -76,7 +77,12 @@ class DetailsActivity : AppCompatActivity() {
             .load(backdropURL)
             .into(ivBanner)
 
-        tvTitle.text = title
+        if(title == originalName)
+        {
+            tvTitle.text = title
+        }else{
+            tvTitle.text = title + " / " + originalName
+        }
         tvOverview.text = overview
 
 
@@ -105,7 +111,7 @@ class DetailsActivity : AppCompatActivity() {
                     if (result.getString("type") == "Trailer") {
                         ytURL = result.getString("key")
 
-                        Log.d("Details activity", "Gownozasrane: $ytURL")
+                        Log.d("Details activity", "msg: $ytURL")
                     }
                 }
 
@@ -124,7 +130,6 @@ class DetailsActivity : AppCompatActivity() {
                         }
                     }
                 })
-
 
                 val jsonTagline = response.getString("tagline")
                 val jsonGenresArray = response.getJSONArray("genres")
@@ -187,7 +192,7 @@ class DetailsActivity : AppCompatActivity() {
                     tvNextEpisode.text = "Brak informacji o następnym odcinku"
                 }
 
-                val adapter = ArrayAdapter<String>(this@DetailsActivity, android.R.layout.simple_spinner_item, seasonNames)
+                val adapter = ArrayAdapter(this@DetailsActivity, android.R.layout.simple_spinner_item, seasonNames)
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
                 spinnerSeasons.adapter = adapter
 
@@ -271,8 +276,6 @@ class DetailsActivity : AppCompatActivity() {
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
     }
-
-
     private fun fetchVideo(seriedId: Int)
     {
         val queue = Volley.newRequestQueue(this)
@@ -322,9 +325,11 @@ class DetailsActivity : AppCompatActivity() {
                     val air_date = episodesObject.optString("air_date", "")
                     val episode_number = episodesObject.optInt("episode_number", -1)
                     val runtime = episodesObject.optInt("runtime", -1)
+                    val imageURL = "https://image.tmdb.org/t/p/w500" + episodesObject.optString("still_path", "")
+                    val overview = episodesObject.optString("overview", "")
 
                     if (air_date.isNotEmpty() && episode_number != -1 && runtime != -1) {
-                        val episode = Episode(name ,air_date, episode_number, runtime)
+                        val episode = Episode(name ,air_date, episode_number, runtime, imageURL, overview)
                         episodesList.add(episode)
                         loadingSpinner.visibility = View.GONE
                     } else {
@@ -343,7 +348,4 @@ class DetailsActivity : AppCompatActivity() {
 
         queue.add(request)
     }
-
-
-
 }

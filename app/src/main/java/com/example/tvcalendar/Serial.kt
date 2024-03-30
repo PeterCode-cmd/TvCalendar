@@ -4,6 +4,7 @@ data class Serial(
 
     val id: Int,
     val title: String,
+    val originalName: String,
     val releaseDate: String,
     val overview: String,
     val posterURL: String,

@@ -3,38 +3,29 @@ package com.example.tvcalendar
 import SerialAdapter
 import android.content.Intent
 import android.os.Bundle
-import android.text.Layout
 import android.util.Log
 import android.view.KeyEvent
 import android.view.View
-import android.view.inputmethod.EditorInfo
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.DatePicker
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.ProgressBar
-import android.widget.Spinner
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.volley.Request
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
-import com.google.android.gms.tasks.Task
-import com.google.android.gms.tasks.TaskCompletionSource
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.firestore
 import org.json.JSONObject
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-import java.time.temporal.TemporalAmount
 
 
 class MainActivity : AppCompatActivity(), FiltersDiagloFragment.OnFilterSelectedListener {
@@ -53,17 +44,18 @@ class MainActivity : AppCompatActivity(), FiltersDiagloFragment.OnFilterSelected
     private lateinit var btnPremiery: Button
     private lateinit var btnMostPopularThisWeek: Button
     private lateinit var btnMostPopularThisDay: Button
-    private var currentDate: LocalDate = LocalDate.now()
-    private var isDatePickerVisible = false
     private lateinit var layoutMain: LinearLayout
     private lateinit var btnNoweOdcinki: Button
     private lateinit var btnFilterButton: Button
     private lateinit var etSearch: EditText
     private lateinit var btnFiltry: Button
     private lateinit var recyclerView: RecyclerView
-    private lateinit var btnZaloguj: Button
+    private lateinit var btnZmienKonto: Button
     private lateinit var btnWatchlist: Button
     private lateinit var loadingSpinner: ProgressBar
+    private lateinit var tvName: TextView
+    private var currentDate: LocalDate = LocalDate.now()
+    private var isDatePickerVisible = false
     private var currentPage = 1
     private var currentCategory = 0
     private var isPremiery = 1
@@ -103,12 +95,13 @@ class MainActivity : AppCompatActivity(), FiltersDiagloFragment.OnFilterSelected
         btnFilterButton = findViewById(R.id.btnFilterButton)
         etSearch = findViewById(R.id.etSearch)
         btnFiltry = findViewById(R.id.btnFiltry)
-        btnZaloguj = findViewById(R.id.btnZaloguj)
+        btnZmienKonto = findViewById(R.id.btnZmienKonto)
         btnWatchlist = findViewById(R.id.btnWatchlist)
         loadingSpinner = findViewById(R.id.progress_loader)
+        tvName = findViewById(R.id.tvName)
 
         serialsList = mutableListOf()
-        adapter = SerialAdapter(serialsList)
+        adapter = SerialAdapter(serialsList, currentDate)
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = adapter
 
@@ -120,6 +113,12 @@ class MainActivity : AppCompatActivity(), FiltersDiagloFragment.OnFilterSelected
         tvSectionInfo.text = btnMostPopularThisDay.text
 
         val user = FirebaseAuth.getInstance().currentUser
+
+        if(user != null) {
+            btnWatchlist.visibility = View.VISIBLE
+            btnZmienKonto.visibility = View.VISIBLE
+            tvName.text = user.email.toString()
+        }
 
         if (user == null) {
             val intent = Intent(this, SingUpActivity::class.java)
@@ -210,11 +209,10 @@ class MainActivity : AppCompatActivity(), FiltersDiagloFragment.OnFilterSelected
             drawerLayout.closeDrawer(GravityCompat.START) // Zamknij wysuwane okno boczne po wybraniu opcji
         }
 
-        btnZaloguj.setOnClickListener {
+        btnZmienKonto.setOnClickListener {
 
             val intent = Intent(this, SignInActivity::class.java)
             startActivity(intent)
-
         }
 
         btnWatchlist.setOnClickListener {
@@ -585,6 +583,7 @@ class MainActivity : AppCompatActivity(), FiltersDiagloFragment.OnFilterSelected
 
         tvCurrentDate.text = LocalDate.now().toString()
 
+
     }
 
     private fun performSearch(query: String) {
@@ -776,8 +775,9 @@ class MainActivity : AppCompatActivity(), FiltersDiagloFragment.OnFilterSelected
         val userRatingCount = response.getInt("vote_count")
         val backdropUrl = "https://image.tmdb.org/t/p/w500" + backdrop
         val posterUrl = "https://image.tmdb.org/t/p/w500" + posterPath
+        val originalName = response.getString("original_name")
 
-        serials.add(Serial( id ,title, releaseDate, overview, posterUrl, userRating, userRatingCount, backdropUrl, false))
+        serials.add(Serial( id ,title, originalName ,releaseDate, overview, posterUrl, userRating, userRatingCount, backdropUrl, false))
 
         return serials
     }
@@ -797,18 +797,19 @@ class MainActivity : AppCompatActivity(), FiltersDiagloFragment.OnFilterSelected
             val id = serialJson.getInt("id")
             val backdrop = serialJson.getString("backdrop_path")
             val backdropUrl = "https://image.tmdb.org/t/p/w500" + backdrop
+            val originalName = serialJson.getString("original_name")
 
             serialId = id.toString()
 
             if(currentCategory == 5)
             {
                 if(posterPath != "null" && overview != ""){
-                serials.add(Serial( id ,title, releaseDate, overview, posterUrl, userRating, userRatingCount, backdropUrl, false))}
+                serials.add(Serial( id ,title, originalName, releaseDate, overview, posterUrl, userRating, userRatingCount, backdropUrl, false))}
 
             }else{
                 if(posterPath != "null")
                 {
-                    serials.add(Serial( id ,title, releaseDate, overview, posterUrl, userRating, userRatingCount, backdropUrl, false))
+                    serials.add(Serial( id ,title, originalName, releaseDate, overview, posterUrl, userRating, userRatingCount, backdropUrl, false))
                 }
             }
 

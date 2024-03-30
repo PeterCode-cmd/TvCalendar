@@ -2,11 +2,12 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
+    android:id="@+id/cardView"
     android:layout_height="wrap_content"
     android:layout_marginBottom="16dp"
     android:padding="16dp"
     app:cardBackgroundColor="@color/bgSerial"
-    app:cardCornerRadius="20dp"
+    app:cardCornerRadius="10dp"
     android:elevation="4dp">
 
     <LinearLayout
@@ -42,16 +43,6 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="5dp"/>
 
-            <TextView
-                android:id="@+id/tvSeriesId"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textStyle="bold"
-                android:textSize="18sp"
-                android:paddingTop="5dp"
-                android:visibility="gone"
-                android:layout_marginBottom="5dp"/>
-
             <!-- Data premiery -->
             <TextView
                 android:id="@+id/releaseDateTextView"
@@ -67,16 +58,31 @@
                 android:orientation="horizontal"
                 android:layout_marginBottom="5dp">
 
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:src="@drawable/gwiazdka"/>
+
                 <TextView
-                    android:id="@+id/userRating"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="14sp"
-                    android:layout_marginEnd="5dp"/>
+                    android:id="@+id/tvUserRating"
+                    android:text="lalalla"
+                    android:textSize="20sp"
+                    android:layout_marginLeft="5dp"/>
+
+                <TextView
+                    android:id="@+id/tvUserCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    android:text="180 głosów"
+                    android:layout_marginStart="5dp"/>
+
 
             </LinearLayout>
 
-            <TextView
+            <!--<TextView
                 android:id="@+id/seeMoreButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -86,7 +92,7 @@
                 android:layout_gravity="bottom|left"
                 android:layout_marginBottom="5dp"
                 android:clickable="true"
-                android:text="Zobacz więcej" />
+                android:text="Zobacz więcej" />-->
 
         </LinearLayout>
 
