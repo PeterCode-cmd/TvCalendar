@@ -41,6 +41,7 @@ android {
 
 dependencies {
 
+    implementation("com.google.android.material:material:1.3.0")
     implementation("com.pierfrancescosoffritti.androidyoutubeplayer:core:12.1.0")
     implementation ("com.squareup.picasso:picasso:2.71828")
     implementation(platform("org.jetbrains.kotlin:kotlin-bom:1.8.0"))

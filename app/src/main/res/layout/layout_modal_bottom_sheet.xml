@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@color/black">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Gatunki"
+        android:textSize="20sp"
+        android:layout_margin="10dp"
+        android:textStyle="bold"/>
+
+    <!-- Lista gatunków -->
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:id="@+id/gatunki"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <!-- Elementy listy gatunków -->
+            <!-- Przykład: -->
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_marginEnd="30dp"
+                android:layout_height="wrap_content"
+                android:text="Akcja i przygoda" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_marginEnd="30dp"
+                android:layout_height="wrap_content"
+                android:text="Animacja" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_marginEnd="30dp"
+                android:layout_height="wrap_content"
+                android:text="Komedia" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_marginEnd="30dp"
+                android:layout_height="wrap_content"
+                android:text="Kryminał" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_marginEnd="30dp"
+                android:layout_height="wrap_content"
+                android:text="Dokumentalny" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_marginEnd="30dp"
+                android:layout_height="wrap_content"
+                android:text="Dramat" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_marginEnd="30dp"
+                android:layout_height="wrap_content"
+                android:text="Sci-fi" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_marginEnd="30dp"
+                android:layout_height="wrap_content"
+                android:text="Western" />
+
+            <!-- Dodaj więcej gatunków według potrzeb -->
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="VOD"
+        android:textSize="20sp"
+        android:layout_margin="10dp"
+        android:textStyle="bold"/>
+
+    <!-- Lista kanałów telewizyjnych -->
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:id="@+id/kanaly"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <!-- Elementy listy kanałów -->
+            <!-- Przykład: -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="HBO" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Netflix" />
+
+            <!-- Dodaj więcej kanałów według potrzeb -->
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Ilość głosów"
+        android:textSize="20sp"
+        android:layout_margin="10dp"
+        android:textStyle="bold"/>
+
+    <!-- Lista minimalnej liczby głosów -->
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:id="@+id/glosy"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <!-- Elementy listy minimalnej liczby głosów -->
+            <!-- Przykład: -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="100 głosów" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="500 głosów" />
+
+            <!-- Dodaj więcej opcji według potrzeb -->
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Rok premiery"
+        android:layout_margin="10dp"
+        android:textSize="20sp"
+        android:textStyle="bold"/>
+    <!-- Lista lat -->
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:id="@+id/lata"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <!-- Elementy listy lat -->
+            <!-- Generowanie lat od 2003 do 2024 -->
+            <!-- Przykład: -->
+            <!-- Użyj pętli w kodzie Kotlin/Java do generowania TextView dla każdego roku -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2003" />
+
+            <!-- Powtórz TextView dla każdego roku aż do 2024 -->
+        </LinearLayout>
+    </HorizontalScrollView>
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/reset"
+            android:clickable="true"
+            android:layout_gravity="bottom"
+            android:layout_margin="10dp"/>
+
+        <ImageView
+            android:id="@+id/btnApply"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="10dp"
+            android:clickable="true"
+            android:src="@drawable/done" />
+    </LinearLayout>
+
+
+</LinearLayout>

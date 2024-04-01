@@ -1,25 +1,26 @@
 package com.example.tvcalendar
 
 import SerialAdapter
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.KeyEvent
 import android.view.View
 import android.widget.Button
 import android.widget.DatePicker
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.GravityCompat
-import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.volley.Request
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
+import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.firestore
@@ -28,32 +29,39 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 
-class MainActivity : AppCompatActivity(), FiltersDiagloFragment.OnFilterSelectedListener {
+class MainActivity : AppCompatActivity(), CustomBottomSheetDialogFragment.FilterSelectionListener {
 
 
-    private lateinit var drawerLayout: DrawerLayout
+    //private lateinit var drawerLayout: DrawerLayout
+    private lateinit var bottomNav: BottomNavigationView
     private lateinit var mostPopularSeriesButton: Button
     private lateinit var adapter: SerialAdapter
     private lateinit var serialsList: MutableList<Serial>
     private lateinit var datePicker: DatePicker
     private lateinit var tvCurrentDate: TextView
     private lateinit var tvSectionInfo: TextView
-    private lateinit var btnNextDayButton: Button
-    private lateinit var btnPrevDayButton: Button
+    private lateinit var btnNextDayButton: ImageView
+    private lateinit var btnPrevDayButton: ImageView
     private lateinit var calendarLayout: LinearLayout
     private lateinit var btnPremiery: Button
     private lateinit var btnMostPopularThisWeek: Button
-    private lateinit var btnMostPopularThisDay: Button
+    //private lateinit var btnMostPopularThisDay: Button
     private lateinit var layoutMain: LinearLayout
     private lateinit var btnNoweOdcinki: Button
-    private lateinit var btnFilterButton: Button
+    private lateinit var btnFilterButton: ImageView
     private lateinit var etSearch: EditText
     private lateinit var btnFiltry: Button
     private lateinit var recyclerView: RecyclerView
-    private lateinit var btnZmienKonto: Button
-    private lateinit var btnWatchlist: Button
+    private lateinit var btnSortingButton: ImageView
+    //private lateinit var btnZmienKonto: Button
+    //private lateinit var btnWatchlist: Button
     private lateinit var loadingSpinner: ProgressBar
     private lateinit var tvName: TextView
+    private lateinit var ivLogOut: ImageView
+    private lateinit var tvEmailDetails: TextView
+    private lateinit var tvWatchlistDetails: TextView
+    private lateinit var tvBrakSeriali: TextView
+    private lateinit var topBar: AppBarLayout
     private var currentDate: LocalDate = LocalDate.now()
     private var isDatePickerVisible = false
     private var currentPage = 1
@@ -81,43 +89,203 @@ class MainActivity : AppCompatActivity(), FiltersDiagloFragment.OnFilterSelected
         recyclerView = findViewById(R.id.recyclerView)
         datePicker = findViewById(R.id.datePicker)
         layoutMain = findViewById(R.id.layoutMain)
-        btnPremiery = findViewById(R.id.btnPremiery)
-        tvSectionInfo = findViewById(R.id.tvSectionInfo)
-        drawerLayout = findViewById(R.id.drawer_layout)
-        mostPopularSeriesButton = findViewById(R.id.most_popular_series_button)
+        ivLogOut = findViewById(R.id.ivLogOut)
+        tvEmailDetails = findViewById(R.id.tvEmailInfo)
+        tvBrakSeriali = findViewById(R.id.tvBrakSeriali)
+        tvWatchlistDetails = findViewById(R.id.tvWatchlistInfo)
+        btnSortingButton = findViewById(R.id.btnSortingButton)
+        //btnPremiery = findViewById(R.id.btnPremiery)
+        //tvSectionInfo = findViewById(R.id.tvSectionInfo)
+        //drawerLayout = findViewById(R.id.drawer_layout)
+        //mostPopularSeriesButton = findViewById(R.id.most_popular_series_button)
         btnNextDayButton = findViewById(R.id.nextDayButton)
         btnPrevDayButton = findViewById(R.id.previousDayButton)
         tvCurrentDate = findViewById(R.id.dateTextView)
         calendarLayout = findViewById(R.id.dateSelectionLayout)
-        btnMostPopularThisWeek = findViewById(R.id.most_popular_this_week)
-        btnMostPopularThisDay = findViewById(R.id.most_popular_this_day)
-        btnNoweOdcinki = findViewById(R.id.btnNoweOdcinki)
         btnFilterButton = findViewById(R.id.btnFilterButton)
+        //btnMostPopularThisWeek = findViewById(R.id.most_popular_this_week)
+        //btnMostPopularThisDay = findViewById(R.id.most_popular_this_day)
+        //btnNoweOdcinki = findViewById(R.id.btnNoweOdcinki)
         etSearch = findViewById(R.id.etSearch)
-        btnFiltry = findViewById(R.id.btnFiltry)
-        btnZmienKonto = findViewById(R.id.btnZmienKonto)
-        btnWatchlist = findViewById(R.id.btnWatchlist)
+        //btnFiltry = findViewById(R.id.btnFiltry)
+        //btnZmienKonto = findViewById(R.id.btnZmienKonto)
+        //btnWatchlist = findViewById(R.id.btnWatchlist)
         loadingSpinner = findViewById(R.id.progress_loader)
-        tvName = findViewById(R.id.tvName)
+        //tvName = findViewById(R.id.tvName)
+        tvBrakSeriali = findViewById(R.id.tvBrakSeriali)
 
         serialsList = mutableListOf()
-        adapter = SerialAdapter(serialsList, currentDate)
+        adapter = SerialAdapter(serialsList)
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = adapter
-
 
         btnPrevDayButton.visibility = View.GONE
         btnNextDayButton.visibility = View.GONE
         calendarLayout.visibility = View.GONE
         tvCurrentDate.visibility = View.GONE
-        tvSectionInfo.text = btnMostPopularThisDay.text
+        //tvSectionInfo.text = btnMostPopularThisDay.text
 
         val user = FirebaseAuth.getInstance().currentUser
 
-        if(user != null) {
-            btnWatchlist.visibility = View.VISIBLE
-            btnZmienKonto.visibility = View.VISIBLE
-            tvName.text = user.email.toString()
+        bottomNav = findViewById(R.id.bottom_navigation)
+
+        topBar = findViewById(R.id.topBarLayout)
+
+        btnFilterButton.setOnClickListener {
+
+            val bottomSheet = CustomBottomSheetDialogFragment()
+            bottomSheet.show(supportFragmentManager, bottomSheet.tag)
+
+        }
+
+        ivLogOut.setOnClickListener {
+
+            FirebaseAuth.getInstance().signOut()
+            startActivity(Intent(this, SignInActivity::class.java))
+            finish()
+
+        }
+
+        bottomNav.setOnNavigationItemSelectedListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.navigation_user -> {
+
+                    ivLogOut.visibility = View.VISIBLE
+                    tvEmailDetails.visibility = View.VISIBLE
+                    tvEmailDetails.text = user?.email
+                    //tvWatchlistDetails.text = fetchWatchlistAmount()
+
+                    topBar.visibility = View.GONE
+                    etSearch.visibility = View.GONE
+                    btnPrevDayButton.visibility = View.GONE
+                    btnNextDayButton.visibility = View.GONE
+                    calendarLayout.visibility = View.GONE
+                    tvCurrentDate.visibility = View.GONE
+
+                    serialsList.clear()
+
+                    adapter.notifyDataSetChanged()
+
+                    true
+                }
+                R.id.navigation_search -> {
+
+                    ivLogOut.visibility = View.GONE
+                    tvEmailDetails.visibility = View.GONE
+
+                    etSearch.visibility = View.VISIBLE
+                    topBar.visibility = View.GONE
+
+                    btnPrevDayButton.visibility = View.GONE
+                    btnNextDayButton.visibility = View.GONE
+                    calendarLayout.visibility = View.GONE
+                    tvCurrentDate.visibility = View.GONE
+
+                    serialsList.clear()
+
+                    adapter.notifyDataSetChanged()
+
+                    // Obsługa kliknięcia na element Dashboard
+                    true
+                }
+                R.id.navigation_filters -> {
+
+                    topBar.visibility = View.VISIBLE
+
+                    loadingSpinner.visibility = View.VISIBLE
+
+                    val url = "https://api.themoviedb.org/3/tv/top_rated?language=pl-PL&page=1&api_key=666a73d3efd51c4e1b78be4cd2c7a8ce"
+
+                    val request = JsonObjectRequest(
+                        Request.Method.GET,url, null,
+                        { response ->
+                            val serials = parseResponse(response)
+
+                            val pages = response.getInt("total_pages")
+
+                            if (currentPage == pages) {
+                                isLastPage = true
+                            } else {
+                                isLastPage = false
+                            }
+
+                            serialsList.clear()
+                            serialsList.addAll(serials)
+                            adapter.notifyDataSetChanged()
+                            loadingSpinner.visibility = View.GONE
+                        },
+                        { error ->
+                            error.printStackTrace()
+                        })
+
+                    Volley.newRequestQueue(this).add(request)
+
+                    btnPrevDayButton.visibility = View.GONE
+                    btnNextDayButton.visibility = View.GONE
+                    calendarLayout.visibility = View.GONE
+                    tvCurrentDate.visibility = View.GONE
+                    //btnFilterButton.visibility = View.VISIBLE
+
+                    currentCategory = 4
+
+                    resetPageNumber()
+
+                    loadingSpinner.visibility = View.GONE
+                    ivLogOut.visibility = View.GONE
+                    tvEmailDetails.visibility = View.GONE
+                    // Obsługa kliknięcia na element Notifications
+                    true
+                }
+                R.id.navigation_kalendarz -> {
+
+                    fetchDataForDateNoweOdcinki(currentDate)
+
+
+                    isPremiery = 0
+                    topBar.visibility = View.GONE
+
+                    ivLogOut.visibility = View.GONE
+                    tvEmailDetails.visibility = View.GONE
+                    etSearch.visibility = View.GONE
+                    btnPrevDayButton.visibility = View.VISIBLE
+                    btnNextDayButton.visibility = View.VISIBLE
+                    calendarLayout.visibility = View.GONE
+                    tvCurrentDate.visibility = View.VISIBLE
+                    //btnFilterButton.visibility = View.GONE
+
+                    recyclerView.scrollToPosition(0)
+
+                    currentCategory = 3
+
+                    resetPageNumber()
+
+                    adapter.notifyDataSetChanged()
+
+                    true
+                }
+                R.id.navigation_watchlist -> {
+
+                    currentCategory = 10
+                    topBar.visibility = View.GONE
+
+                    etSearch.visibility = View.GONE
+                    ivLogOut.visibility = View.GONE
+                    tvEmailDetails.visibility = View.GONE
+                    //btnFilterButton.visibility = View.GONE
+                    btnPrevDayButton.visibility = View.GONE
+                    btnNextDayButton.visibility = View.GONE
+                    calendarLayout.visibility = View.GONE
+                    tvCurrentDate.visibility = View.GONE
+                    //btnFilterButton.visibility = View.GONE
+
+                    serialsList.clear()
+                    fetchSerialDetails()
+                    recyclerView.scrollToPosition(0)
+
+                    true
+                }
+                else -> false
+            }
         }
 
         if (user == null) {
@@ -153,9 +321,9 @@ class MainActivity : AppCompatActivity(), FiltersDiagloFragment.OnFilterSelected
             btnNextDayButton.visibility = View.GONE
             calendarLayout.visibility = View.GONE
             tvCurrentDate.visibility = View.GONE
-            btnFilterButton.visibility = View.GONE
+            //btnFilterButton.visibility = View.GONE
 
-            tvSectionInfo.text = btnMostPopularThisDay.text
+            //tvSectionInfo.text = btnMostPopularThisDay.text
 
             recyclerView.scrollToPosition(0)
 
@@ -163,7 +331,7 @@ class MainActivity : AppCompatActivity(), FiltersDiagloFragment.OnFilterSelected
 
             resetPageNumber()
 
-            drawerLayout.closeDrawer(GravityCompat.START) // Zamknij wysuwane okno boczne po wybraniu opcji
+            //drawerLayout.closeDrawer(GravityCompat.START) // Zamknij wysuwane okno boczne po wybraniu opcji
         }
         else
         {
@@ -196,9 +364,9 @@ class MainActivity : AppCompatActivity(), FiltersDiagloFragment.OnFilterSelected
             btnNextDayButton.visibility = View.GONE
             calendarLayout.visibility = View.GONE
             tvCurrentDate.visibility = View.GONE
-            btnFilterButton.visibility = View.GONE
+            //btnFilterButton.visibility = View.GONE
 
-            tvSectionInfo.text = btnMostPopularThisDay.text
+            //tvSectionInfo.text = btnMostPopularThisDay.text
 
             recyclerView.scrollToPosition(0)
 
@@ -206,16 +374,16 @@ class MainActivity : AppCompatActivity(), FiltersDiagloFragment.OnFilterSelected
 
             resetPageNumber()
 
-            drawerLayout.closeDrawer(GravityCompat.START) // Zamknij wysuwane okno boczne po wybraniu opcji
+            //drawerLayout.closeDrawer(GravityCompat.START) // Zamknij wysuwane okno boczne po wybraniu opcji
         }
 
-        btnZmienKonto.setOnClickListener {
+        /*btnZmienKonto.setOnClickListener {
 
             val intent = Intent(this, SignInActivity::class.java)
             startActivity(intent)
-        }
+        }*/
 
-        btnWatchlist.setOnClickListener {
+        /*btnWatchlist.setOnClickListener {
 
             currentCategory = 10
 
@@ -232,7 +400,7 @@ class MainActivity : AppCompatActivity(), FiltersDiagloFragment.OnFilterSelected
             recyclerView.scrollToPosition(0)
             drawerLayout.closeDrawer(GravityCompat.START)
 
-        }
+        }*/
 
 
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -251,7 +419,7 @@ class MainActivity : AppCompatActivity(), FiltersDiagloFragment.OnFilterSelected
                         currentPage++
                         if(currentCategory == 4)
                         {
-                            onFilterApplied(selYear, selSort, selVote, selProvider, selGenre, currentPage)
+                            //onFilterApplied(selYear, selVote, selProvider, selGenre, currentPage)
                         }
                         else {
                             fetchDataForPage(currentPage, currentCategory, currentDate)
@@ -262,12 +430,12 @@ class MainActivity : AppCompatActivity(), FiltersDiagloFragment.OnFilterSelected
         })
 
 
-        btnFilterButton.setOnClickListener {
+        /*btnFilterButton.setOnClickListener {
 
             showFiltersDialog()
             adapter.notifyDataSetChanged()
 
-        }
+        }*/
 
         etSearch.setOnKeyListener{v, keyCode, event ->
             when{
@@ -275,15 +443,14 @@ class MainActivity : AppCompatActivity(), FiltersDiagloFragment.OnFilterSelected
                 {
                     serialsList.clear()
                     performSearch(etSearch.text.toString())
-                    drawerLayout.closeDrawer(GravityCompat.START)
-                    tvSectionInfo.text = etSearch.text.toString()
+                    etSearch.hint = etSearch.text.toString()
                     etSearch.text.clear()
-                    btnFilterButton.visibility = View.GONE
+                    //btnFilterButton.visibility = View.GONE
                     btnPrevDayButton.visibility = View.GONE
                     btnNextDayButton.visibility = View.GONE
                     calendarLayout.visibility = View.GONE
                     tvCurrentDate.visibility = View.GONE
-                    btnFilterButton.visibility = View.GONE
+                    //btnFilterButton.visibility = View.GONE
 
                     currentCategory = 6
 
@@ -295,7 +462,7 @@ class MainActivity : AppCompatActivity(), FiltersDiagloFragment.OnFilterSelected
             }
         }
 
-        btnFiltry.setOnClickListener {
+        /*btnFiltry.setOnClickListener {
 
             loadingSpinner.visibility = View.VISIBLE
 
@@ -339,9 +506,9 @@ class MainActivity : AppCompatActivity(), FiltersDiagloFragment.OnFilterSelected
             drawerLayout.closeDrawer(GravityCompat.START)
 
             loadingSpinner.visibility = View.GONE
-        }
+        }*/
 
-        btnNoweOdcinki.setOnClickListener {
+        /*btnNoweOdcinki.setOnClickListener {
 
             fetchDataForDateNoweOdcinki(currentDate)
 
@@ -365,9 +532,9 @@ class MainActivity : AppCompatActivity(), FiltersDiagloFragment.OnFilterSelected
 
             adapter.notifyDataSetChanged()
 
-        }
+        }*/
 
-        btnMostPopularThisDay.setOnClickListener{
+        /*btnMostPopularThisDay.setOnClickListener{
 
             val url = "https://api.themoviedb.org/3/trending/tv/day?language=pl-PL&api_key=666a73d3efd51c4e1b78be4cd2c7a8ce"
 
@@ -409,9 +576,9 @@ class MainActivity : AppCompatActivity(), FiltersDiagloFragment.OnFilterSelected
             resetPageNumber()
 
             drawerLayout.closeDrawer(GravityCompat.START) // Zamknij wysuwane okno boczne po wybraniu opcji
-        }
+        }*/
 
-        btnMostPopularThisWeek.setOnClickListener{
+        /*btnMostPopularThisWeek.setOnClickListener{
 
             val url = "https://api.themoviedb.org/3/trending/tv/week?language=pl-PL&api_key=666a73d3efd51c4e1b78be4cd2c7a8ce"
 
@@ -453,9 +620,9 @@ class MainActivity : AppCompatActivity(), FiltersDiagloFragment.OnFilterSelected
             drawerLayout.closeDrawer(GravityCompat.START)
 
 
-        }
+        }*/
 
-        btnPremiery.setOnClickListener{
+        /*btnPremiery.setOnClickListener{
 
             currentCategory = 5
 
@@ -476,11 +643,11 @@ class MainActivity : AppCompatActivity(), FiltersDiagloFragment.OnFilterSelected
             tvSectionInfo.text = btnPremiery.text
 
             drawerLayout.closeDrawer(GravityCompat.START)
-        }
+        }*/
 
         calendarLayout.layoutAnimation
 
-        mostPopularSeriesButton.setOnClickListener {
+       /* mostPopularSeriesButton.setOnClickListener {
 
             val url = "https://api.themoviedb.org/3/discover/tv?api_key=666a73d3efd51c4e1b78be4cd2c7a8ce&first_air_date_year=2024&include_adult=false&language=pl-PL&page=1&sort_by=vote_count.desc&with_poster=true"
 
@@ -521,7 +688,7 @@ class MainActivity : AppCompatActivity(), FiltersDiagloFragment.OnFilterSelected
             resetPageNumber()
 
             drawerLayout.closeDrawer(GravityCompat.START) // Zamknij wysuwane okno boczne po wybraniu opcji
-        }
+        }*/
 
 
         tvCurrentDate.setOnClickListener{
@@ -549,13 +716,13 @@ class MainActivity : AppCompatActivity(), FiltersDiagloFragment.OnFilterSelected
             }
         }
 
-
         btnNextDayButton.setOnClickListener{
             if (isPremiery == 1) {
                 val nextDate = currentDate.plusDays(1)
                 changeDate(nextDate)
                 recyclerView.scrollToPosition(0)
                 updateCalendarDate(nextDate)
+
             } else {
                 val nextDate = currentDate.plusDays(1)
                 changeDateForEpisodes(nextDate)
@@ -585,6 +752,10 @@ class MainActivity : AppCompatActivity(), FiltersDiagloFragment.OnFilterSelected
 
 
     }
+
+    /*private fun fetchWatchlistAmount(): Int {
+
+    }*/
 
     private fun performSearch(query: String) {
 
@@ -621,13 +792,12 @@ class MainActivity : AppCompatActivity(), FiltersDiagloFragment.OnFilterSelected
 
     }
 
-    private fun showFiltersDialog() {
+   /* private fun showFiltersDialog() {
         val filtersDialogFragment = FiltersDiagloFragment(this@MainActivity, serialsList, recyclerView)
         resetPageNumber()
         adapter.notifyDataSetChanged()
         filtersDialogFragment.show(supportFragmentManager, "FiltersDialogFragment")
-    }
-
+    }*/
     private fun fetchDataForPage(pageNumber: Int,  category: Int, selectedDate: LocalDate) {
         isLoading = true
 
@@ -679,6 +849,7 @@ class MainActivity : AppCompatActivity(), FiltersDiagloFragment.OnFilterSelected
         tvCurrentDate.text = formattedDate
         currentDate = selectedDate
         fetchDataForDateNoweOdcinki(selectedDate)
+        saveDateToSharedPreferences(selectedDate)
 
     }
 
@@ -688,6 +859,7 @@ class MainActivity : AppCompatActivity(), FiltersDiagloFragment.OnFilterSelected
         tvCurrentDate.text = formattedDate
         currentDate = selectedDate
         fetchDataForDatePremiery(selectedDate)
+        saveDateToSharedPreferences(selectedDate)
 
     }
 
@@ -829,7 +1001,7 @@ class MainActivity : AppCompatActivity(), FiltersDiagloFragment.OnFilterSelected
         return sortCriteriaMap[sortCriteria]?: sortCriteria
     }
 
-    override fun onFilterApplied(year: String, sortCriteria: String, voteAmount: String, selectedProviders: List<String>, selectedGenres: List<String>, currentPage: Int) {
+    /*override fun onFilterApplied(year: String,voteAmount: String, selectedProviders: List<String>, selectedGenres: List<String>, currentPage: Int) {
 
         isLoading = true
 
@@ -856,15 +1028,12 @@ class MainActivity : AppCompatActivity(), FiltersDiagloFragment.OnFilterSelected
         val selectedGenresCodes = selectedGenres.mapNotNull { genresCodes[it] }
         val genresString = selectedGenresCodes.joinToString("|")
 
-        val modifiedSortCriteria = mapSortCriteria(sortCriteria)
-
         selGenre = selectedGenres
         selProvider = selectedProviders
-        selSort = sortCriteria
         selVote = voteAmount
         selYear = year
 
-        val url = "https://api.themoviedb.org/3/discover/tv?api_key=666a73d3efd51c4e1b78be4cd2c7a8ce&first_air_date_year=$year&include_adult=false&language=pl-PL&sort_by=$modifiedSortCriteria&with_poster=true&vote_count.gte=$voteAmount&watch_region=PL&with_watch_providers=$providersString&with_genres=$genresString&page=$currentPage"
+        val url = "https://api.themoviedb.org/3/discover/tv?api_key=666a73d3efd51c4e1b78be4cd2c7a8ce&first_air_date_year=$year&include_adult=false&language=pl-PL&with_poster=true&vote_count.gte=$voteAmount&watch_region=PL&with_watch_providers=$providersString&with_genres=$genresString&page=$currentPage"
 
         Log.d("Main Activity", "Provider call: $url")
 
@@ -885,7 +1054,7 @@ class MainActivity : AppCompatActivity(), FiltersDiagloFragment.OnFilterSelected
             })
 
         Volley.newRequestQueue(this).add(request)
-    }
+    }*/
 
     private fun fetchSerialDetails() {
 
@@ -896,6 +1065,12 @@ class MainActivity : AppCompatActivity(), FiltersDiagloFragment.OnFilterSelected
 
         collectionRef.get()
             .addOnSuccessListener { documents ->
+
+                if (documents.isEmpty) {
+                    loadingSpinner.visibility = View.GONE
+                    return@addOnSuccessListener
+                }
+
                 val serialIds = mutableListOf<Int>()
                 val serialsMap = mutableMapOf<Int, Long>()
 
@@ -947,7 +1122,24 @@ class MainActivity : AppCompatActivity(), FiltersDiagloFragment.OnFilterSelected
             }
             .addOnFailureListener { exception ->
                 exception.printStackTrace()
+                loadingSpinner.visibility = View.GONE
             }
+    }
+
+    private fun saveDateToSharedPreferences(date: LocalDate) {
+        val sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.putString("current_date", date.toString())
+        editor.apply()
+    }
+
+    override fun onFilterSelected(
+        genres: List<String>,
+        channels: List<String>,
+        year: String,
+        votes: String
+    ) {
+
     }
 
 }

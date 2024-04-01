@@ -1,53 +1,27 @@
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import android.graphics.Typeface
-import android.net.Uri
-import android.opengl.Visibility
-import android.text.Spannable
-import android.text.SpannableString
-import android.text.style.StyleSpan
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.ImageView
-import android.widget.RatingBar
+import android.widget.ProgressBar
 import android.widget.TextView
-import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
-import androidx.core.content.ContentProviderCompat.requireContext
-import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.android.volley.VolleyLog.TAG
-import com.android.volley.toolbox.JsonObjectRequest
-import com.android.volley.toolbox.Volley
 import com.bumptech.glide.Glide
 import com.example.tvcalendar.DetailsActivity
-import com.example.tvcalendar.MainActivity
 import com.example.tvcalendar.R
 import com.example.tvcalendar.Serial
-import com.example.tvcalendar.SerialDetailsDialogFragment
-import com.example.tvcalendar.SingUpActivity
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.FieldValue
-import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
-import org.json.JSONObject
-import java.net.URL
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 
 
-class SerialAdapter(private val serials: List<Serial>, private val selectedDate: LocalDate) : RecyclerView.Adapter<SerialAdapter.SerialViewHolder>(), View.OnClickListener {
+class SerialAdapter(private val serials: List<Serial>) : RecyclerView.Adapter<SerialAdapter.SerialViewHolder>(), View.OnClickListener {
 
     private var db = Firebase.firestore
     private lateinit var sharedPreferences: SharedPreferences
@@ -71,11 +45,13 @@ class SerialAdapter(private val serials: List<Serial>, private val selectedDate:
             holder.itemView.context.startActivity(intent)
         }
 
-        if(selectedDate.toString() == serial.releaseDate) {
+        /*if(selectedDate.toString() == serial.releaseDate) {
             holder.posterImageView.visibility = View.GONE
+            Log.d("selectedDate", selectedDate.toString())
         } else {
             holder.posterImageView.visibility = View.VISIBLE
-        }
+            Log.d("selectedDate", selectedDate.toString())
+        }*/
 
         if (!serial.title.isNullOrEmpty()) {
             holder.titleTextView.text = serial.title
@@ -89,11 +65,10 @@ class SerialAdapter(private val serials: List<Serial>, private val selectedDate:
             holder.releaseDateTextView.text = "Brak daty premiery"
         }
 
-        val context = holder.itemView.context ?: return
-
         sharedPreferences = holder.itemView.context.getSharedPreferences("watchlist_prefs", Context.MODE_PRIVATE)
 
         val isInWatchlist = sharedPreferences.getBoolean(serial.id.toString(), false)
+
         if (isInWatchlist) {
             holder.imdbIcon.setImageResource(R.drawable.oczkozolte)
         } else {
@@ -103,6 +78,9 @@ class SerialAdapter(private val serials: List<Serial>, private val selectedDate:
         val userId = FirebaseAuth.getInstance().currentUser!!.uid
 
         holder.imdbIcon.setOnClickListener {
+            holder.imdbIcon.visibility = View.INVISIBLE
+            holder.progressBar.visibility = View.VISIBLE
+
             val serialMap = hashMapOf(
                 "serialId" to serial.id,
                 "timestamp" to FieldValue.serverTimestamp()
@@ -116,13 +94,18 @@ class SerialAdapter(private val serials: List<Serial>, private val selectedDate:
                     if (document.exists()) {
                         serialDocRef.delete()
                             .addOnSuccessListener {
+                                holder.imdbIcon.visibility = View.INVISIBLE
+                                holder.progressBar.visibility = View.VISIBLE
+
                                 Log.d(TAG, "Serial removed successfully")
-                                Toast.makeText(context, "Usunięto ${serial.title} z listy do obejrzenia", Toast.LENGTH_SHORT).show()
                                 // Zaktualizuj interfejs użytkownika
                                 holder.imdbIcon.setImageResource(R.drawable.oczkoxd) // Ustaw białą ikonkę
                                 serial.isInWatchlist = false // Zaktualizuj wartość isInWatchlist
                                 // Zapisz stan w SharedPreferences
                                 sharedPreferences.edit().putBoolean(serial.id.toString(), false).apply()
+
+                                holder.progressBar.visibility = View.GONE
+                                holder.imdbIcon.visibility = View.VISIBLE
                             }
                             .addOnFailureListener { e ->
                                 Log.w(TAG, "Error removing serial", e)
@@ -130,13 +113,18 @@ class SerialAdapter(private val serials: List<Serial>, private val selectedDate:
                     } else {
                         serialDocRef.set(serialMap)
                             .addOnSuccessListener {
+                                holder.imdbIcon.visibility = View.INVISIBLE
+                                holder.progressBar.visibility = View.VISIBLE
+
                                 Log.d(TAG, "Serial added successfully")
-                                Toast.makeText(context, "Dodano ${serial.title} do listy do obejrzenia", Toast.LENGTH_SHORT).show()
                                 // Zaktualizuj interfejs użytkownika
                                 holder.imdbIcon.setImageResource(R.drawable.oczkozolte) // Ustaw żółtą ikonkę
                                 serial.isInWatchlist = true // Zaktualizuj wartość isInWatchlist
                                 // Zapisz stan w SharedPreferences
                                 sharedPreferences.edit().putBoolean(serial.id.toString(), true).apply()
+
+                                holder.progressBar.visibility = View.GONE
+                                holder.imdbIcon.visibility = View.VISIBLE
                             }
                             .addOnFailureListener { e ->
                                 Log.w(TAG, "Error adding serial", e)
@@ -184,7 +172,8 @@ class SerialAdapter(private val serials: List<Serial>, private val selectedDate:
     class SerialViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         //val btnSeeMore: TextView = itemView.findViewById(R.id.seeMoreButton)
-        val imdbIcon: ImageView = itemView.findViewById(R.id.imdbIconImageView)
+        val progressBar: ProgressBar = itemView.findViewById(R.id.progress_loader)
+        val imdbIcon: ImageView = itemView.findViewById(R.id.btnWatchlist)
         val userRating: TextView = itemView.findViewById(R.id.tvUserRating)
         val userCount: TextView = itemView.findViewById(R.id.tvUserCount)
         val titleTextView: TextView = itemView.findViewById(R.id.titleTextView)
