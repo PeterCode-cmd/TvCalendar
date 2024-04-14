@@ -34,7 +34,7 @@ class ProvidersSpinnerAdapter(context: Context, private val providers: List<Stri
         return view
     }
 
-    fun getSelectedProviders(): List<String> {
+    private fun getSelectedProviders(): List<String> {
         val selectedList = mutableListOf<String>()
         for (i in selectedProviders.indices) {
             if (selectedProviders[i]) {

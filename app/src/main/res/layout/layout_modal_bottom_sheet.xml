@@ -9,16 +9,33 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:text="Filtry"
+        android:textSize="35sp"
+        android:textColor="@color/white2"
+        android:layout_marginHorizontal="10dp"
+
+        android:textStyle="bold"/>
+
+    <View
+        android:layout_width="wrap_content"
+        android:layout_height="2dp"
+        android:layout_marginVertical="10dp"
+        android:background="@color/hintColor"
+        android:layout_gravity="center_vertical" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:text="Gatunki"
-        android:textSize="20sp"
-        android:layout_margin="10dp"
+        android:textSize="16sp"
+        android:layout_marginHorizontal="10dp"
         android:textStyle="bold"/>
 
     <!-- Lista gatunków -->
     <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
+        android:layout_marginHorizontal="10dp"
         android:fillViewport="true">
 
         <LinearLayout
@@ -27,54 +44,60 @@
             android:layout_height="match_parent"
             android:orientation="horizontal">
 
-            <!-- Elementy listy gatunków -->
-            <!-- Przykład: -->
-            <androidx.appcompat.widget.AppCompatTextView
+            <CheckBox
                 android:layout_width="wrap_content"
                 android:layout_marginEnd="30dp"
                 android:layout_height="wrap_content"
+                android:tag="Akcja i przygoda"
                 android:text="Akcja i przygoda" />
 
-            <androidx.appcompat.widget.AppCompatTextView
+            <androidx.appcompat.widget.AppCompatCheckBox
                 android:layout_width="wrap_content"
                 android:layout_marginEnd="30dp"
                 android:layout_height="wrap_content"
+                android:tag="Animacja"
                 android:text="Animacja" />
 
-            <androidx.appcompat.widget.AppCompatTextView
+            <androidx.appcompat.widget.AppCompatCheckBox
                 android:layout_width="wrap_content"
                 android:layout_marginEnd="30dp"
                 android:layout_height="wrap_content"
+                android:tag="Komedia"
                 android:text="Komedia" />
 
-            <androidx.appcompat.widget.AppCompatTextView
+            <androidx.appcompat.widget.AppCompatCheckBox
                 android:layout_width="wrap_content"
                 android:layout_marginEnd="30dp"
                 android:layout_height="wrap_content"
+                android:tag="Kryminał"
                 android:text="Kryminał" />
 
-            <androidx.appcompat.widget.AppCompatTextView
+            <androidx.appcompat.widget.AppCompatCheckBox
                 android:layout_width="wrap_content"
                 android:layout_marginEnd="30dp"
                 android:layout_height="wrap_content"
+                android:tag="Dokumentalny"
                 android:text="Dokumentalny" />
 
-            <androidx.appcompat.widget.AppCompatTextView
+            <androidx.appcompat.widget.AppCompatCheckBox
                 android:layout_width="wrap_content"
                 android:layout_marginEnd="30dp"
                 android:layout_height="wrap_content"
+                android:tag="Dramat"
                 android:text="Dramat" />
 
-            <androidx.appcompat.widget.AppCompatTextView
+            <androidx.appcompat.widget.AppCompatCheckBox
                 android:layout_width="wrap_content"
                 android:layout_marginEnd="30dp"
                 android:layout_height="wrap_content"
+                android:tag="Sci-fi"
                 android:text="Sci-fi" />
 
-            <androidx.appcompat.widget.AppCompatTextView
+            <androidx.appcompat.widget.AppCompatCheckBox
                 android:layout_width="wrap_content"
                 android:layout_marginEnd="30dp"
                 android:layout_height="wrap_content"
+                android:tag="Western"
                 android:text="Western" />
 
             <!-- Dodaj więcej gatunków według potrzeb -->
@@ -85,15 +108,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="VOD"
-        android:textSize="20sp"
-        android:layout_margin="10dp"
+        android:textSize="16sp"
+        android:layout_marginHorizontal="10dp"
         android:textStyle="bold"/>
 
     <!-- Lista kanałów telewizyjnych -->
     <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
+        android:layout_marginHorizontal="10dp"
         android:fillViewport="true">
 
         <LinearLayout
@@ -104,89 +127,105 @@
 
             <!-- Elementy listy kanałów -->
             <!-- Przykład: -->
-            <TextView
+            <androidx.appcompat.widget.AppCompatCheckBox
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="HBO" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_marginEnd="30dp"
+                android:tag="Netflix"
                 android:text="Netflix" />
+
+            <androidx.appcompat.widget.AppCompatCheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="30dp"
+                android:tag="Amazon Prime"
+                android:text="Amazon Prime" />
+
+            <androidx.appcompat.widget.AppCompatCheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="30dp"
+                android:tag="Disney+"
+                android:text="Disney+" />
+
+            <androidx.appcompat.widget.AppCompatCheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="30dp"
+                android:tag="Apple TV Plus"
+                android:text="Apple TV Plus" />
+
+            <androidx.appcompat.widget.AppCompatCheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="30dp"
+                android:tag="SkyShowtime"
+                android:text="SkyShowtime" />
+
+            <androidx.appcompat.widget.AppCompatCheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="30dp"
+                android:tag="Hbo Max"
+                android:text="Hbo Max" />
 
             <!-- Dodaj więcej kanałów według potrzeb -->
         </LinearLayout>
     </HorizontalScrollView>
 
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Ilość głosów"
-        android:textSize="20sp"
-        android:layout_margin="10dp"
+        android:text="Minimalna ilość głosów"
+        android:textSize="16sp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginHorizontal="10dp"
         android:textStyle="bold"/>
 
     <!-- Lista minimalnej liczby głosów -->
-    <HorizontalScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:fillViewport="true">
+    <LinearLayout
+        android:id="@+id/glosy"
+        android:layout_width="wrap_content"
+        android:layout_marginHorizontal="10dp"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
 
-        <LinearLayout
-            android:id="@+id/glosy"
+        <androidx.appcompat.widget.AppCompatSpinner
+            android:id="@+id/votes_spinner"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:background="@drawable/spinner_background"
+            android:tooltipText="Wybierz rok premiery"/>
 
-            <!-- Elementy listy minimalnej liczby głosów -->
-            <!-- Przykład: -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="100 głosów" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="500 głosów" />
-
-            <!-- Dodaj więcej opcji według potrzeb -->
-        </LinearLayout>
-    </HorizontalScrollView>
+    </LinearLayout>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Rok premiery"
-        android:layout_margin="10dp"
-        android:textSize="20sp"
+        android:layout_marginVertical="10dp"
+        android:layout_marginHorizontal="10dp"
+        android:textSize="16sp"
         android:textStyle="bold"/>
     <!-- Lista lat -->
-    <HorizontalScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:fillViewport="true">
 
-        <LinearLayout
-            android:id="@+id/lata"
+    <LinearLayout
+        android:id="@+id/lata"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginHorizontal="10dp"
+        android:orientation="horizontal">
+
+        <androidx.appcompat.widget.AppCompatSpinner
+            android:id="@+id/years_spinner"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:background="@drawable/spinner_background" />
 
-            <!-- Elementy listy lat -->
-            <!-- Generowanie lat od 2003 do 2024 -->
-            <!-- Przykład: -->
-            <!-- Użyj pętli w kodzie Kotlin/Java do generowania TextView dla każdego roku -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="2003" />
-
-            <!-- Powtórz TextView dla każdego roku aż do 2024 -->
-        </LinearLayout>
-    </HorizontalScrollView>
+    </LinearLayout>
 
 
     <LinearLayout
@@ -200,6 +239,7 @@
             android:layout_height="50dp"
             android:src="@drawable/reset"
             android:clickable="true"
+            android:visibility="gone"
             android:layout_gravity="bottom"
             android:layout_margin="10dp"/>
 
@@ -212,6 +252,4 @@
             android:clickable="true"
             android:src="@drawable/done" />
     </LinearLayout>
-
-
 </LinearLayout>

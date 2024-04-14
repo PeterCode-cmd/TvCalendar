@@ -1,27 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <!--<item
         android:id="@+id/navigation_filters"
-        android:icon="@drawable/filter"
-        android:title=""/>
+        android:icon="@drawable/gwiazdka"
+        app:showAsAction="ifRoom"
+        android:title="Rankingi"/>-->
 
     <item
         android:id="@+id/navigation_kalendarz"
         android:icon="@drawable/kalendarz"
-        android:title="" />
+        android:title="Kalendarz" />
 
     <item
         android:id="@+id/navigation_search"
         android:icon="@drawable/baseline_search_24"
-        android:title="" />
+        android:title="Szukaj" />
 
     <item
         android:id="@+id/navigation_watchlist"
         android:icon="@drawable/watchlist"
-        android:title=""/>
+        android:title="Moja lista"/>
 
     <item
         android:id="@+id/navigation_user"
         android:icon="@drawable/user"
-        android:title=""/>
+        android:title="Konto"/>
 </menu>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cardViewGrid"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="8dp"
+    android:elevation="4dp"
+    android:orientation="vertical"
+    app:cardBackgroundColor="@color/bgSerial"
+    app:cardCornerRadius="10dp">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <!-- Pierwszy obrazek -->
+        <ImageView
+            android:id="@+id/ivPosterImage"
+            android:layout_width="100dp"
+            android:layout_height="150dp"
+            android:clickable="true"
+            android:foreground="?android:attr/selectableItemBackground" />
+
+        <View
+            android:layout_width="100dp"
+            android:layout_height="1dp"
+            android:background="@color/white"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/ivPosterImage"/>
+
+        <ProgressBar
+            android:id="@+id/progress_loader"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignBottom="@id/watchlistButton"
+            android:layout_alignLeft="@id/watchlistButton"
+            android:layout_gravity="center"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/watchlistButton"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_margin="3dp"
+            android:src="@drawable/watchlist"
+            android:clickable="true"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:layout_below="@id/ivPosterImage"/>
+
+        <TextView
+            android:id="@+id/tvReleaseDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/watchlistButton"
+            android:layout_marginBottom="8dp"
+            android:layout_toRightOf="@id/watchlistButton"
+            android:textSize="11sp"
+            android:text="2024-02-11" />
+
+
+    </RelativeLayout>
+
+
+</androidx.cardview.widget.CardView>

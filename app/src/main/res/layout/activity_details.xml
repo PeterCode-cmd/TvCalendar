@@ -4,8 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:scrollbars="vertical"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    android:scrollbarSize="1dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".MainActivity">
+    tools:context=".DetailsActivity">
 
     <RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -13,29 +16,100 @@
         android:background="@color/black"
         android:layout_height="match_parent">
 
-        <!-- Baner serialu -->
-        <ImageView
-            android:id="@+id/bannerImageView"
+        <RelativeLayout
+            android:id="@+id/bannerLayout"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:scaleType="centerCrop"
-            android:layout_alignParentTop="true"/>
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/bannerImageView"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:scaleType="centerCrop"
+                android:layout_alignParentTop="true"/>
+
+            <ImageView
+                android:id="@+id/ivPlayButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/play"
+                android:clickable="true"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:layout_centerInParent="true" />
+        </RelativeLayout>
 
         <com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
             android:id="@+id/youtube_player_view"
             android:layout_width="match_parent"
             android:visibility="gone"
             app:autoPlay="false"
-            android:soundEffectsEnabled="false"
-            android:layout_height="wrap_content" />
+            android:layout_above="@id/mainLayout"
+            android:layout_height="200dp" />
 
         <!-- Informacje o serialu -->
         <LinearLayout
+            android:id="@+id/mainLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_below="@id/bannerImageView"
+            android:layout_below="@id/bannerLayout"
             android:padding="16dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginVertical="8dp">
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/gwiazdka"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tvUserRating"
+                    tools:text="Fallout"
+                    android:textStyle="bold"
+                    android:layout_gravity="center"
+                    android:textSize="20sp"
+                    android:layout_marginLeft="5dp"/>
+
+                <TextView
+                    android:id="@+id/tvUserCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    android:text="180 głosów"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="5dp"/>
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp">
+
+                    <ProgressBar
+                        android:id="@+id/progress_loader2"
+                        style="?android:attr/progressBarStyle"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_centerVertical="true"
+                        android:layout_centerHorizontal="true"
+                        android:visibility="gone" />
+
+                    <ImageView
+                        android:id="@+id/watchlistButton"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:src="@drawable/watchlist"
+                        android:clickable="true"
+                        android:layout_gravity="center"/>
+
+                </RelativeLayout>
+
+            </LinearLayout>
 
             <!-- Tytuł serialu -->
             <TextView
@@ -43,18 +117,19 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textStyle="bold"
-                android:layout_marginEnd="80dp"
+                android:layout_marginEnd="15dp"
                 android:textSize="24sp"
-                android:layout_marginBottom="8dp"/>
+                tools:text="Title"
+                android:layout_marginBottom="10dp"/>
 
             <TextView
                 android:id="@+id/tvTagline"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="16sp"
-                android:layout_marginEnd="80dp"
+                android:layout_marginEnd="15dp"
                 android:textStyle="italic"
-                android:layout_marginBottom="8dp"/>
+                android:layout_marginBottom="10dp"/>
 
             <TextView
                 android:id="@+id/tvTypeid"
@@ -63,14 +138,14 @@
                 android:layout_height="wrap_content"
                 android:textSize="18sp"
                 android:text="Kategorie"
-                android:layout_marginBottom="8dp"/>
+                android:layout_marginBottom="10dp"/>
 
             <TextView
                 android:id="@+id/tvType"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="16sp"
-                android:layout_marginBottom="8dp"/>
+                android:layout_marginBottom="10dp"/>
 
             <TextView
                 android:id="@+id/tvProviders"
@@ -78,15 +153,115 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="18sp"
-                android:text="Gdzie obejrzeć"
-                android:layout_marginBottom="8dp"/>
+                android:text="VOD"
+                android:layout_marginBottom="10dp"/>
 
             <TextView
                 android:id="@+id/tvLanguages"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="16sp"
-                android:layout_marginBottom="8dp"/>
+                android:visibility="visible"
+                android:layout_marginBottom="10dp"/>
+
+            <!--<LinearLayout
+                android:id="@+id/image_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginVertical="16dp"/>-->
+
+            <TextView
+                android:id="@+id/tvLastEpisode"
+                android:textStyle="bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:text="Poprzedni odcinek"
+                android:layout_marginBottom="10dp"/>
+
+            <androidx.cardview.widget.CardView
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:padding="16dp"
+                app:cardBackgroundColor="@color/bgSerial"
+                app:cardCornerRadius="10dp"
+                android:elevation="4dp">
+
+                <LinearLayout
+                    android:id="@+id/latestLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <RelativeLayout
+                        android:layout_width="150dp"
+                        android:layout_height="150dp">
+
+                        <ImageView
+                            android:id="@+id/posterImageView"
+                            android:layout_width="150dp"
+                            android:layout_height="150dp"
+                            android:scaleType="centerCrop"
+                            android:adjustViewBounds="true"
+                            android:layout_marginEnd="8dp"/>
+
+                        <ImageView
+                            android:id="@+id/posterSeeMore"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:src="@drawable/seemore"
+                            android:layout_alignParentBottom="true"
+                            android:layout_alignParentStart="true" />
+                    </RelativeLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:padding="5dp"
+                        android:orientation="vertical">
+
+                        <!-- Tytuł -->
+                        <TextView
+                            android:id="@+id/tvEpisodeName"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textStyle="bold"
+                            android:textSize="16sp"
+                            android:paddingTop="5dp"
+                            android:layout_marginEnd="8dp"
+                            android:layout_marginBottom="5dp"/>
+
+                        <TextView
+                            android:id="@+id/tvEpisodeRuntime"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="5dp"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/tvEpisodeNumber"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="5dp"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/tvEpisodeAirDate"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="5dp"
+                            android:textSize="14sp" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
 
             <TextView
                 android:id="@+id/tvNextEpis"
@@ -95,14 +270,14 @@
                 android:layout_height="wrap_content"
                 android:textSize="18sp"
                 android:text="Następny odcinek"
-                android:layout_marginBottom="8dp"/>
+                android:layout_marginBottom="10dp"/>
 
             <TextView
                 android:id="@+id/tvNextEpisode"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="16sp"
-                android:layout_marginBottom="8dp"/>
+                android:layout_marginBottom="10dp"/>
 
             <TextView
                 android:id="@+id/tvOverview"
@@ -111,7 +286,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="18sp"
                 android:text="Opis Serialu"
-                android:layout_marginBottom="8dp"/>
+                android:layout_marginBottom="10dp"/>
 
             <!-- Opis serialu -->
             <TextView
@@ -121,7 +296,7 @@
                 android:textSize="16sp"
                 android:maxLines="2"
                 android:ellipsize="end"
-                android:layout_marginBottom="8dp"/>
+                android:layout_marginBottom="10dp"/>
 
             <!-- Przycisk "Rozwiń" -->
             <TextView
@@ -131,8 +306,27 @@
                 android:text="Rozwiń"
                 android:textSize="16sp"
                 android:textColor="@color/customRozwin"
-                android:layout_marginBottom="16dp"
+                android:layout_marginBottom="10dp"
                 android:visibility="gone"/> <!-- Początkowo niewidoczny -->
+
+            <TextView
+                android:id="@+id/tvPolecane"
+                android:textStyle="bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                tools:text="Jeśli lubisz "
+                android:layout_marginBottom="10dp"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewDetails"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:scrollbars="horizontal"
+                android:layout_weight="1"
+                android:scrollbarSize="1dp"
+                android:visibility="visible"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
             <Spinner
                 android:id="@+id/spinner_seasons"
@@ -141,8 +335,8 @@
                 android:layout_centerVertical="true"
                 android:layout_centerHorizontal="true"
                 android:padding="8dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="16dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="12dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="16dp"
                 android:background="@drawable/edittext_background"
@@ -156,14 +350,12 @@
                 android:layout_centerInParent="true"
                 android:visibility="gone" />
 
-            <!-- Inne informacje o serialu -->
-            <!-- Dodaj inne pola TextView dla innych informacji o serialu, takich jak gatunek, długość itp. -->
-
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/episodesRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"/>
+                android:layout_marginTop="10dp"/>
+
 
         </LinearLayout>
 

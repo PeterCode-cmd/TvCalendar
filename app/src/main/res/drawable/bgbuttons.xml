@@ -4,7 +4,7 @@
     <corners android:radius="14dp" />
     <gradient
         android:startColor="#000000"
-        android:endColor="#191919"
+        android:endColor="#171717"
         android:angle="45" />
 
     <stroke

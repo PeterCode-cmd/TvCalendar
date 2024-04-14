@@ -6,6 +6,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.tvcalendar.DateManager
 import com.example.tvcalendar.Episode
 import com.example.tvcalendar.EpisodeDetailsDialogFragment
 import com.example.tvcalendar.R
@@ -21,6 +22,7 @@ class EpisodeListAdapter(private val episodes: List<Episode>) : RecyclerView.Ada
         val ivPosterSeeMore: ImageView = itemView.findViewById(R.id.posterSeeMore)
     }
 
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EpisodeViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.episode_item, parent, false)
         return EpisodeViewHolder(view)
@@ -35,6 +37,9 @@ class EpisodeListAdapter(private val episodes: List<Episode>) : RecyclerView.Ada
         holder.tvEpisodeAirDate.text = "${episode.air_data}"
 
 
+        if(holder.tvEpisodeAirDate.text == DateManager.date){
+            holder.tvEpisodeAirDate.text = "Dzisiaj"
+        }
         // Load the image using Glide
         if (episode.imageURL.length > 35) {
             Glide.with(holder.itemView)
@@ -58,7 +63,6 @@ class EpisodeListAdapter(private val episodes: List<Episode>) : RecyclerView.Ada
             val dialog = EpisodeDetailsDialogFragment(episode)
             dialog.show((holder.itemView.context as AppCompatActivity).supportFragmentManager, "dialog")
         }
-
     }
 
     override fun getItemCount(): Int {

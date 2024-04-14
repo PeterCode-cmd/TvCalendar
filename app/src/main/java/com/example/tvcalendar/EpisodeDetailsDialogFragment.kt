@@ -28,4 +28,5 @@ class EpisodeDetailsDialogFragment(private val episode: Episode):DialogFragment(
             .create()
 
     }
+
 }

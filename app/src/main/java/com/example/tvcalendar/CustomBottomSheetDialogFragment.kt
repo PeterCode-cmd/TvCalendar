@@ -1,106 +1,99 @@
 package com.example.tvcalendar
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.LinearLayout
-import android.widget.TextView
-import androidx.core.content.ContextCompat
-import androidx.core.view.children
+import android.widget.ArrayAdapter
+import androidx.appcompat.widget.AppCompatCheckBox
+import androidx.recyclerview.widget.RecyclerView
+import com.example.tvcalendar.databinding.LayoutModalBottomSheetBinding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
-class CustomBottomSheetDialogFragment : BottomSheetDialogFragment() {
+class CustomBottomSheetDialogFragment(private val serialsList: MutableList<Serial>,private val recyclerView: RecyclerView) : BottomSheetDialogFragment() {
+    private lateinit var binding: LayoutModalBottomSheetBinding
 
-    private var listener: FilterSelectionListener? = null
-
-    private val genres = listOf("Akcja i przygoda", "Animacja", "Komedia", "Kryminał", "Dokumentalny", "Dramat", "Sci-fi", "Western")
-    private val channels = listOf("Netflix", "Amazon Prime", "Disney+", "Apple TV Plus", "SkyShowtime", "Hbo Max")
-    private val votes = listOf("50", "100", "150", "250", "350", "500", "1000", "2000", "5000")
-    private val years = listOf("2003","2004","2005","2006","2007","2008","2009","2010","2011","2012","2013","2014","2015","2016","2017","2018","2019","2020","2021","2022", "2023", "2024")
-
-    private val selectedGenres = mutableListOf<String>()
-    private val selectedChannels = mutableListOf<String>()
-    private var selectedVotes = ""
-    private var selectedYear = ""
-
-    interface FilterSelectionListener {
-        fun onFilterSelected(genres: List<String>, channels: List<String>, votes: String, year: String)
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        try {
-            listener = context as FilterSelectionListener
-        } catch (e: ClassCastException) {
-            throw ClassCastException("$context must implement FilterSelectionListener")
-        }
+    interface OnApplyButtonClickListener {
+        fun onApplyButtonClick(genres: List<String>, channels: List<String>, votes: String, year: String)
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? {
-        val view = inflater.inflate(R.layout.layout_modal_bottom_sheet, container, false)
-
-        setupFilterSection(view.findViewById(R.id.gatunki), genres, selectedGenres)
-        setupFilterSection(view.findViewById(R.id.kanaly), channels, selectedChannels)
-        setupSingleChoiceFilterSection(view.findViewById(R.id.glosy), votes) { selectedVotes = it }
-        setupSingleChoiceFilterSection(view.findViewById(R.id.lata), years) { selectedYear = it }
-
-        view.findViewById<Button>(R.id.btnApply).setOnClickListener {
-            listener?.onFilterSelected(selectedGenres, selectedChannels, selectedVotes, selectedYear)
-            dismiss()
-        }
-
-        return view
+    ): View {
+        binding = LayoutModalBottomSheetBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
-    private fun setupFilterSection(layout: LinearLayout, items: List<String>, selectedItems: MutableList<String>) {
-        items.forEach { item ->
-            val textView = createSelectableTextView(item)
-            textView.setOnClickListener {
-                it.isSelected = !it.isSelected
-                if (it.isSelected) {
-                    selectedItems.add(item)
-                } else {
-                    selectedItems.remove(item)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        // Przywróć stan, jeśli istnieje
+        savedInstanceState?.let { savedState ->
+            AppData.selectedGenres = savedState.getStringArrayList("selectedGenres")?.toMutableList() ?: mutableListOf()
+            AppData.selectedChannels = savedState.getStringArrayList("selectedChannels")?.toMutableList() ?: mutableListOf()
+            AppData.selectedVotes = savedState.getString("selectedVotes") ?: ""
+            AppData.selectedYear = savedState.getString("selectedYear") ?: ""
+        }
+
+        val yearsArray = resources.getStringArray(R.array.years_array)
+        val yearsAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, yearsArray)
+        yearsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        binding.yearsSpinner.adapter = yearsAdapter
+
+        val votesArray = resources.getStringArray(R.array.votes_array)
+        val votesAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, votesArray)
+        votesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        binding.votesSpinner.adapter = votesAdapter
+
+        AppData.selectedGenres.forEach { genre ->
+            binding.gatunki.findViewWithTag<AppCompatCheckBox>(genre)?.isChecked = true
+        }
+        AppData.selectedChannels.forEach { channel ->
+            binding.kanaly.findViewWithTag<AppCompatCheckBox>(channel)?.isChecked = true
+        }
+
+        val selectedYearPosition = yearsAdapter.getPosition(AppData.selectedYear)
+        binding.yearsSpinner.setSelection(selectedYearPosition)
+
+        val selectedVotesPosition = votesAdapter.getPosition(AppData.selectedVotes)
+        binding.votesSpinner.setSelection(selectedVotesPosition)
+
+        binding.btnApply.setOnClickListener {
+            // Pobranie wyborów użytkownika
+            AppData.selectedGenres.clear()
+            AppData.selectedChannels.clear()
+            for (i in 0 until binding.gatunki.childCount) {
+                val checkBox = binding.gatunki.getChildAt(i) as? AppCompatCheckBox
+                if (checkBox?.isChecked == true) {
+                    AppData.selectedGenres.add(checkBox.text.toString())
                 }
             }
-            layout.addView(textView)
-        }
-    }
-
-    private fun setupSingleChoiceFilterSection(layout: LinearLayout, items: List<String>, onItemSelected: (String) -> Unit) {
-        items.forEach { item ->
-            val textView = createSelectableTextView(item)
-            textView.setOnClickListener { view ->
-                layout.children.forEach { it.isSelected = false }
-                view.isSelected = true
-                onItemSelected(item)
+            for (i in 0 until binding.kanaly.childCount) {
+                val checkBox = binding.kanaly.getChildAt(i) as? AppCompatCheckBox
+                if (checkBox?.isChecked == true) {
+                    AppData.selectedChannels.add(checkBox.text.toString())
+                }
             }
-            layout.addView(textView)
+            AppData.selectedVotes = binding.votesSpinner.selectedItem.toString()
+            AppData.selectedYear = binding.yearsSpinner.selectedItem.toString()
+
+
+            serialsList.clear()
+            recyclerView.scrollToPosition(0)
+            // Przekazanie wyborów do MainActivity
+            (activity as? OnApplyButtonClickListener)?.onApplyButtonClick(AppData.selectedGenres, AppData.selectedChannels, AppData.selectedVotes, AppData.selectedYear)
+
+            // Zamknięcie okna modalnego
+            dismiss()
         }
     }
 
-    private fun createSelectableTextView(text: String): TextView {
-        return TextView(context).apply {
-            layoutParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            )
-            setText(text)
-            setTextSize(16f)
-            setPadding(8, 8, 8, 8)
-            background = ContextCompat.getDrawable(context, R.drawable.noimage)
-            isClickable = true
-            isFocusable = true
-        }
-    }
-
-    // Metoda do ustawienia listenera z aktywności/fragmentu
-    fun setFilterSelectionListener(listener: FilterSelectionListener) {
-        this.listener = listener
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        // Zapisz stan wybranych filtrów
+        outState.putStringArrayList("selectedGenres", ArrayList(AppData.selectedGenres))
+        outState.putStringArrayList("selectedChannels", ArrayList(AppData.selectedChannels))
+        outState.putString("selectedVotes", AppData.selectedVotes)
+        outState.putString("selectedYear", AppData.selectedYear)
     }
 }

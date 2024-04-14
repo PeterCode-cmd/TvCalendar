@@ -1,39 +1,415 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
 
-    <!-- Main content -->
-    <LinearLayout
-        android:id="@+id/layoutMain"
+    <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
+        <!-- Main content -->
         <LinearLayout
+            android:id="@+id/layoutMain"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:padding="16dp"
-            android:background="@color/black"
-            tools:context=".MainActivity">
+            android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/ivLogOut"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:src="@drawable/logout"
-                android:layout_gravity="end"
-                android:visibility="gone"/>
-
-            <androidx.appcompat.widget.AppCompatEditText
-                android:id="@+id/etSearch"
+            <LinearLayout
                 android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="16dp"
+                android:background="@color/black"
+                tools:context=".MainActivity">
+
+                <ImageView
+                    android:id="@+id/ivLogOut"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:src="@drawable/logout"
+                    android:layout_gravity="end"
+                    android:visibility="gone"/>
+
+                <LinearLayout
+                    android:id="@+id/topBar"
+                    android:visibility="gone"
+                    android:layout_width="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <androidx.appcompat.widget.AppCompatEditText
+                            android:id="@+id/etSearch"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/edittext_background"
+                            android:drawableStart="@drawable/baseline_search_24"
+                            android:drawablePadding="8dp"
+                            android:hint="Wpisz nazwę serialu"
+                            android:imeOptions="actionSearch"
+                            android:inputType="text"
+                            android:maxLines="1"
+                            android:paddingStart="16dp"
+                            android:paddingTop="12dp"
+                            android:paddingEnd="16dp"
+                            android:paddingBottom="12dp"
+                            android:textColorHint="@color/hintColor"
+                            android:textSize="16sp"
+                            android:visibility="visible" />
+
+                        <ImageView
+                            android:id="@+id/btnDeleteText"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerInParent="true"
+                            android:layout_marginEnd="8dp"
+                            android:visibility="gone"
+                            android:src="@drawable/delete" />
+
+                        <ImageView
+                            android:id="@+id/btnFilterButton"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerInParent="true"
+                            android:layout_marginEnd="8dp"
+                            android:src="@drawable/tune" />
+
+                        <ImageView
+                            android:id="@+id/btnUndoButton"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:visibility="gone"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerInParent="true"
+                            android:layout_marginEnd="8dp"
+                            android:src="@drawable/undo" />
+
+                        <ImageView
+                            android:id="@+id/btnSortingButton"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_marginEnd="45dp"
+                            android:visibility="gone"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerInParent="true"
+                            android:src="@drawable/sortowanie" />
+
+
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tvSortingInfo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="Sortuj po czyms tam"
+                    android:visibility="gone"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_gravity="start"
+                    android:textSize="15sp"/>
+
+                <LinearLayout
+                    android:id="@+id/buttonsLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:visibility="visible"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="15dp">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/previousDayButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:clickable="true"
+                        android:src="@drawable/kalendarzlewo" />
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/dateTextView"
+                            android:layout_width="200dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="15dp"
+                            android:background="@drawable/bgbuttons"
+                            android:gravity="center"
+                            android:paddingVertical="8dp"
+                            android:text="Current Date"
+                            android:textSize="16sp"
+                            android:textStyle="bold">
+                        </androidx.appcompat.widget.AppCompatTextView>
+
+                        <ImageView
+                            android:id="@+id/ivOczko"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/watchlist"
+                            android:paddingStart="10dp"
+                            android:layout_alignTop="@id/dateTextView"
+                            android:layout_alignBottom="@id/dateTextView"
+                            android:layout_alignLeft="@id/dateTextView"/>
+
+                        <ImageView
+                            android:id="@+id/ivKalendarz"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/kalendarz"
+                            android:paddingRight="10dp"
+                            android:layout_alignTop="@id/dateTextView"
+                            android:layout_alignBottom="@id/dateTextView"
+                            android:layout_alignRight="@id/dateTextView"/>
+
+                    </RelativeLayout>
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/nextDayButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:clickable="true"
+                        android:src="@drawable/kalendarzprawo"
+                        android:visibility="visible" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/dateSelectionLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:visibility="gone"
+                    android:orientation="horizontal"
+                    android:padding="16dp">
+
+                    <DatePicker
+                        android:id="@+id/datePicker"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:calendarViewShown="false"
+                        android:datePickerMode="calendar" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/sadFaceLayout"
+                    android:layout_width="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="150dp"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:id="@+id/ivBrakSeriali"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:src="@drawable/smutek"
+                        android:visibility="visible"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textStyle="bold"
+                        android:text="ups... chyba nic tu po tobie"
+                        android:textSize="20sp"
+                        android:layout_gravity="center"/>
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:layout_marginTop="25dp"
+                    android:textSize="25sp"
+                    android:id="@+id/tvEmailInfo"
+                    android:visibility="gone"
+                    tools:text="mail"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:layout_marginTop="25dp"
+                    android:textSize="25sp"
+                    android:id="@+id/tvWatchlistInfo"
+                    android:visibility="gone"
+                    tools:text="mail"/>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerViewGrid"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:visibility="gone" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:scrollbars="vertical"
+                    android:layout_weight="1"
+                    android:scrollbarSize="1dp"
+                    android:visibility="gone"
+                    app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+                <LinearLayout
+                    android:id="@+id/hintsLayout"
+                    android:visibility="gone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <RelativeLayout
+                        android:id="@+id/layout1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:id="@+id/title1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textStyle="bold"
+                            android:text="Najpopularniejsze dzisiaj"
+                            android:layout_marginBottom="10dp"/>
+
+                        <TextView
+                            android:id="@+id/moreButton1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Zobacz więcej"
+                            android:textColor="@color/customRozwin"
+                            android:layout_alignParentEnd="true"
+                            android:layout_alignParentTop="true"
+                            android:layout_marginEnd="10dp" />
+                    </RelativeLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recyclerViewHorizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:scrollbars="horizontal"
+                        android:scrollbarSize="1dp"
+                        android:orientation="horizontal"
+                        android:visibility="visible"
+                        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+                    <RelativeLayout
+                        android:id="@+id/layout2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:id="@+id/title2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textStyle="bold"
+                            android:layout_marginVertical="10dp"
+                            android:text="Najpopularniejsze premiery 2024" />
+
+                        <TextView
+                            android:id="@+id/moreButton2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Zobacz więcej"
+                            android:textColor="@color/customRozwin"
+                            android:layout_centerVertical="true"
+                            android:layout_alignParentEnd="true"
+                            android:layout_marginEnd="10dp" />
+                    </RelativeLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recyclerViewHorizontal2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:scrollbars="horizontal"
+                        android:scrollbarSize="1dp"
+                        android:visibility="visible"
+                        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+                    <RelativeLayout
+                        android:id="@+id/layout3"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:id="@+id/title3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textStyle="bold"
+                            android:layout_marginVertical="10dp"
+                            android:text="Najpopularniejsze tego tygodnia" />
+
+                        <TextView
+                            android:id="@+id/moreButton3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Zobacz więcej"
+                            android:textColor="@color/customRozwin"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginEnd="10dp" />
+                    </RelativeLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recyclerViewHorizontal3"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:scrollbars="horizontal"
+                        android:scrollbarSize="1dp"
+                        android:visibility="visible"
+                        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+        <ProgressBar
+            android:id="@+id/progress_loader"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center"
+            android:visibility="gone" />
+
+        <ProgressBar
+            android:id="@+id/progress_loader2"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center|bottom"
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:id="@+id/layoutSearchHints"
+            android:layout_width="wrap_content"
+            android:layout_marginTop="100dp"
+            android:layout_marginStart="20dp"
+            android:orientation="vertical"
+            android:visibility="gone"
+            android:layout_height="wrap_content">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/most_popular_series_button"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:hint="Wpisz nazwę serialu"
-                android:textColorHint="@color/hintColor"
+                android:textColorHint="@color/white"
+                android:hint="Najpopularniejsze premiery 2024 roku"
                 android:textSize="16sp"
                 android:background="@drawable/edittext_background"
                 android:paddingStart="16dp"
@@ -42,171 +418,53 @@
                 android:paddingBottom="12dp"
                 android:drawableStart="@drawable/baseline_search_24"
                 android:drawablePadding="8dp"
-                android:inputType="text"
-                android:maxLines="1"
-                android:visibility="gone"
-                android:imeOptions="actionSearch"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"/>
+                android:layout_marginBottom="25dp"/>
 
-            <LinearLayout
-                android:id="@+id/buttonsLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:paddingTop="5dp"
-                android:paddingBottom="5dp"
-                android:orientation="horizontal">
-
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/previousDayButton"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:clickable="true"
-                    android:contentDescription="TODO"
-                    android:src="@drawable/left" />
-
-                <TextView
-                    android:id="@+id/dateTextView"
-                    android:layout_width="0dp"
-                    android:layout_height="40dp"
-                    android:layout_weight="1"
-                    android:textSize="16sp"
-                    android:paddingVertical="5dp"
-                    android:layout_marginHorizontal="15dp"
-                    android:visibility="visible"
-                    android:background="@drawable/bgbuttons"
-                    android:text="Current Date"
-                    android:textStyle="bold"
-                    android:gravity="center"/>
-
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/nextDayButton"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:clickable="true"
-                    android:contentDescription="TODO"
-                    android:src="@drawable/right" />
-
-            </LinearLayout>
-
-
-            <LinearLayout
-                android:id="@+id/dateSelectionLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:visibility="gone"
-                android:orientation="horizontal"
-                android:padding="16dp">
-
-                <DatePicker
-                    android:id="@+id/datePicker"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:calendarViewShown="false"
-                    android:datePickerMode="calendar" />
-
-            </LinearLayout>
-
-
-            <TextView
-                android:id="@+id/tvBrakSeriali"
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/most_popular_this_day"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="25sp"
-                android:layout_marginTop="150dp"
-                android:textStyle="bold"
-                android:layout_gravity="center"
-                android:text="brak nowych seriali :("
-                android:visibility="gone"/>
+                android:textColorHint="@color/white"
+                android:hint="Najpopularniejsze seriale dzisiaj"
+                android:textSize="16sp"
+                android:background="@drawable/edittext_background"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:drawableStart="@drawable/baseline_search_24"
+                android:drawablePadding="8dp"
+                android:layout_marginBottom="25dp"/>
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/most_popular_this_week"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="left"
-                android:layout_marginTop="25dp"
-                android:textSize="25sp"
-                android:id="@+id/tvEmailInfo"
-                android:visibility="gone"
-                tools:text="mail"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="left"
-                android:layout_marginTop="25dp"
-                android:textSize="25sp"
-                android:id="@+id/tvWatchlistInfo"
-                android:visibility="gone"
-                tools:text="mail"/>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerView"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:paddingTop="8dp" />
+                android:textColorHint="@color/white"
+                android:hint="Najpopularniejsze seriale ostatnich 7 dni"
+                android:textSize="16sp"
+                android:background="@drawable/edittext_background"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:drawableStart="@drawable/baseline_search_24"
+                android:drawablePadding="8dp"
+                android:layout_marginBottom="25dp"/>
 
         </LinearLayout>
 
-    </LinearLayout>
-
-    <ProgressBar
-        android:id="@+id/progress_loader"
-        style="?android:attr/progressBarStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_gravity="center"
-        android:visibility="gone" />
-
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/topBarLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="visible">
-
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
+        <!-- Bottom Navigation View -->
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bottom_navigation"
             android:layout_width="match_parent"
-            android:background="@color/black"
-            android:layout_height="?attr/actionBarSize"
-            app:layout_scrollFlags="scroll|enterAlways">
-
-        <ImageView
-            android:id="@+id/btnFilterButton"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:layout_marginEnd="8dp"
-            android:src="@drawable/tune"/>
+            android:layout_gravity="bottom"
+            android:background="@color/black"
+            app:layout_behavior="@string/hide_bottom_view_on_scroll_behavior"
+            app:menu="@menu/bottom_navigation_menu" />
 
-            <ImageView
-                android:id="@+id/btnSortingButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:layout_marginEnd="8dp"
-                android:src="@drawable/sortowanie"/>
-
-
-        </androidx.appcompat.widget.Toolbar>
-
-    </com.google.android.material.appbar.AppBarLayout>
-
-    <!-- Bottom Navigation View -->
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottom_navigation"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:background="@color/black"
-        app:layout_behavior="@string/hide_bottom_view_on_scroll_behavior"
-        app:menu="@menu/bottom_navigation_menu" />
-
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 
 
